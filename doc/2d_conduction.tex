@@ -1,0 +1,70 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{mathpazo}
+
+
+\title{Solución de la ecuación de conducción de calor en 2D}
+\author{Daniel Casas-Orozco}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Suposiciones}
+
+\begin{itemize}
+	\item El sistema se puede describir en coordenadas cartesianas (coordenadas rectas)
+	\item Hay generación uniforme de calor en el sólido
+	\item El proceso ocurre en estado transitorio
+	\item Sólo hay cambios significativos de temperatura en los ejes $x$ y $y$ (conducción 2D)
+	\item Las propiedades del material son constantes en el tiempo y con la posición
+\end{itemize}
+
+\section{Desarrollo del modelo}
+
+Con las suposiciones mostradas en la sección anterior, la ecuación de conducción de calor se puede escribir como:
+
+\begin{equation} \label{eq:conduction_eq}
+	\pdv[2]{T}{x} + \pdv[2]{T}{y} + \frac{\dot{q}_{gen}}{k} = \frac{1}{\alpha} \pdv{T}{t}
+\end{equation}
+
+La idea ahora es expresar la Ec. \eqref{eq:conduction_eq} en diferencias finitas. Las segundas derivadas en el lado izquierdo de la Ec. \eqref{eq:conduction_eq} se pueden escribir como:
+
+\begin{equation} \label{eq:second_deriv}
+	\begin{aligned}
+		\pdv[2]{T}{x} & \approx \frac{T_{m + 1, n} - 2 T_{m, n} + T_{m - 1, n}}{\left(\Delta x \right)^2} \\
+		\pdv[2]{T}{y} & \approx \frac{T_{m, n + 1} - 2 T_{m, n} + T_{m, n - 1}}{\left(\Delta y \right)^2}
+	\end{aligned}
+\end{equation}
+
+La derivada temporal se puede expresar como:
+
+\begin{equation}
+	\pdv{T}{t} \approx \frac{T_{m, n}^{i + 1} - T_{m, n}^i}{\Delta t}
+\end{equation}
+
+Si se asume una formulación \emph{explícita} en el tiempo, las derivadas mostradas en las Ecs. \eqref{eq:second_deriv} se escriben con el superíndice $i$, con lo cual la Ec. \eqref{eq:conduction_eq} queda formulada en diferencias finitas como:
+
+\begin{equation}
+	\frac{T_{m + 1, n}^i - 2 T_{m, n}^i + T_{m - 1, n}^i}{\left(\Delta x \right)^2} + \frac{T_{m, n + 1}^i - 2 T_{m, n}^i + T_{m, n - 1}^i}{\left(\Delta y \right)^2} + \frac{\dot{q_{gen}}}{k} = \frac{1}{\alpha} \frac{T_{m, n}^{i + 1} - T_{m, n}^i}{\Delta t}
+\end{equation}
+
+\section{Nodos de frontera}
+
+Las condiciones de frontera son de convección en los extremos en contacto con aire: 
+
+\begin{multline}
+        \frac{h}{k \Delta x} (T_{\infty} - T_{M, n}) + \frac{1}{k} \frac{T_{M - 1, n} - T_{M, n}}{\left( \Delta x \right)^2} + \\
+       	\frac{1}{2 k \left( \Delta y \right)^2} \left( T_{M, n + 1} - 2 T_{M, n} + T_{M, n - 1} \right) \\ +
+      	\frac{\dot{q_{gen}}}{2} = \frac{1}{\alpha} \frac{T_{m, n}^{i + 1} - T_{m, n}^i}{\Delta t} 
+\end{multline}
+
+Los nodos de frontera tienen la mitad del volumen de un nodo central, con lo cual las Ecs. \eqref{boundary_convec_x} se escribe como:
+
+\end{document}
